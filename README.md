@@ -2,7 +2,7 @@
 
 ## Goal
 
-The goal with this project is to develop an AI backend for the it42 project. 
+The goal with this project is to develop an AI-focused API backend for the it42 project. 
 
 This backend filters and serves suggestions, streamlining the user experience for grantees, granters and other people on the platform.
 
@@ -14,6 +14,21 @@ This backend filters and serves suggestions, streamlining the user experience fo
 
 ## Platform
 
- - TODO
+ - Lang: Python
+ - Compatible with OpenAI-style endpoints
+ - Configurable API base prompts, concurrency, endpoints and keys.
+
+## Future Choices
+
+ - Using in-house models to increase accuracy
+ - Context-aware translation in order to ensure accuracy along the whole chain
+	- Open-weighted JeV models are primarily trained in English.
+	- Make the whole chain English, using e.g. Translategemma in the beginning and end.
+	- (IN) Swedish -> (AI Processing) English -> (OUT) Swedish
+
+# Hurdles
+
+ - Conflict of Interest
+ - Matching fields 
 
 
