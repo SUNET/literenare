@@ -1,0 +1,35 @@
+# API only:            docker compose up --build
+# API + local JEV:     JEV_PROTOCOL=decide JEV_BASE_URL=http://jev:8000/v1 JEV_MODEL=autotrust/JEV \
+#                      docker compose --profile models up --build    (needs an NVIDIA GPU)
+#
+# By default the API talks to a /v1/systemone server on the host (port 11434).
+
+services:
+  api:
+    build: .
+    ports: ["8080:8080"]
+    env_file: [{path: .env, required: false}]
+    extra_hosts: ["host.docker.internal:host-gateway"]   # needed on Linux; built in on macOS
+    volumes:
+      - ./config.yaml:/srv/config.yaml:ro   # edit questions/pipelines without rebuilding
+      - ./data:/srv/data:ro
+    restart: unless-stopped
+
+  # autotrust/JEV via serve_decide.py (protocol: decide).
+  # One-time: hf download autotrust/JEV --local-dir ./models/JEV
+  jev:
+    profiles: [models]
+    image: vllm/vllm-openai:latest
+    entrypoint: ["python3", "/models/JEV/serve_decide.py"]
+    command: >
+      --model /models/JEV --served-model-name autotrust/JEV
+      --enable-lora --max-lora-rank 32 --lora-modules jev-decision=/models/JEV/adapter_vllm
+      --logprobs-mode processed_logprobs --max-model-len 32768
+      --enable-prefix-caching --mamba-cache-mode align
+      --host 0.0.0.0 --port 8000
+    volumes: ["./models:/models"]
+    ipc: host
+    deploy:
+      resources:
+        reservations:
+          devices: [{driver: nvidia, count: 1, capabilities: [gpu]}]

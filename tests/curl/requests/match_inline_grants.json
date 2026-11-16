@@ -1,0 +1,21 @@
+{
+  "profile": "Molecular biologist studying protein folding in yeast, PhD awarded 2021, based in Lund.",
+  "grants": [
+    {
+      "id": "inline-yeast",
+      "title": "Protein Homeostasis Research Grant",
+      "funder": "Example Biomedical Trust",
+      "description": "Funds research into protein folding and quality control in model organisms.",
+      "eligibility": "Researchers within ten years of their PhD at a Nordic university.",
+      "focus_areas": ["protein folding", "cell biology"]
+    },
+    {
+      "id": "inline-bridges",
+      "title": "Bridge Engineering Innovation Fund",
+      "funder": "Example Infrastructure Agency",
+      "description": "Supports new materials and inspection methods for road bridges.",
+      "eligibility": "Engineering companies registered in the EU.",
+      "focus_areas": ["civil engineering", "materials"]
+    }
+  ]
+}

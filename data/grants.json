@@ -1,0 +1,29 @@
+[
+  {
+    "id": "example-ml-climate",
+    "title": "Machine Learning for Climate Adaptation (example)",
+    "funder": "Example Research Foundation",
+    "description": "Supports projects applying machine learning to climate adaptation, such as flood forecasting, drought monitoring and resilient infrastructure planning.",
+    "eligibility": "Researchers holding a PhD and employed at a university or research institute in the Nordic countries.",
+    "focus_areas": ["machine learning", "climate adaptation", "remote sensing"],
+    "deadline": "2027-03-01"
+  },
+  {
+    "id": "example-rf-hardware",
+    "title": "Open Radio Hardware for Rural Connectivity (example)",
+    "funder": "Example Innovation Agency",
+    "description": "Funds the development of open-source radio hardware and firmware that improves connectivity in rural and sparsely populated areas.",
+    "eligibility": "Small companies and sole proprietors registered in Sweden.",
+    "focus_areas": ["radio engineering", "embedded systems", "open hardware"],
+    "deadline": "2027-01-15"
+  },
+  {
+    "id": "example-early-career-bio",
+    "title": "Early-Career Grant in Molecular Biology (example)",
+    "funder": "Example Life Science Council",
+    "description": "Supports independent research in molecular and cell biology by researchers within eight years of their PhD.",
+    "eligibility": "PhD awarded within the last eight years; host institution in the EU.",
+    "focus_areas": ["molecular biology", "cell biology"],
+    "deadline": "2027-04-30"
+  }
+]

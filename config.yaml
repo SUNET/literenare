@@ -1,0 +1,74 @@
+# literenare configuration.
+# ${VAR:-default} is expanded from the environment, so secrets and endpoints
+# can live in .env / docker-compose while structure lives here.
+
+server:
+  # Comma-separated keys clients must send as `X-API-Key` or `Authorization: Bearer`.
+  # Empty = auth disabled (dev only).
+  api_keys: "${LITERENARE_API_KEYS:-}"
+  grants_file: "${GRANTS_FILE:-data/grants.json}"
+
+backends:
+  jev:
+    # systemone: POST {base_url}/systemone, all questions about a state in one request.
+    # decide:    autotrust serve_decide.py, POST {base_url}/decide, one question per request.
+    protocol: "${JEV_PROTOCOL:-systemone}"
+    # Inside Docker, "localhost" is the container itself; host.docker.internal is the host.
+    base_url: "${JEV_BASE_URL:-http://host.docker.internal:11434/v1}"
+    model: "${JEV_MODEL:-nimble}"
+    api_key: "${JEV_API_KEY:-}"
+    # In-flight requests per API worker process (total = this x GRANIAN_WORKERS).
+    concurrency: 16
+    timeout: 60
+
+# Questions use the /v1/systemone format:
+#   noul:   {type: noul,   instructions}
+#   choice: {type: choice, instructions, criteria: {key: description|null}}
+#   score:  {type: score,  instructions, criteria: [level0, level1, ...]}   (ordered, low -> high)
+# Local extensions (not sent to the model):
+#   min:      drop the grant if the answer's value is below this
+#             (noul: P(true); score: score / (levels - 1); choice: sum of P(positive))
+#   positive: choice keys that count as "good" for `min`
+# `rank_by` must name a noul question; its P(true) is the ranking probability.
+
+# --- Grant matching ----------------------------------------------------------
+matching:
+  top_k: 20
+  rank_by: match
+  grant_fields: [title, funder, description, eligibility, focus_areas]
+  questions:
+    match:
+      type: noul
+      instructions: "Is this grant a good match for the applicant, given their research field, expertise and career stage?"
+    eligibility:
+      type: noul
+      instructions: "Does the applicant appear to satisfy the grant's eligibility requirements (career stage, affiliation, country)?"
+      min: 0.2
+    no_conflict_of_interest:
+      type: noul
+      instructions: "Is the applicant free of any apparent conflict of interest with the grant's funder or its affiliated organisations?"
+      min: 0.3
+
+# --- Application vs. grant alignment -----------------------------------------
+alignment:
+  rank_by: fit
+  questions:
+    fit:
+      type: noul
+      instructions: "Does this application text address the aims and focus of the grant well?"
+    eligibility_addressed:
+      type: noul
+      instructions: "Does the application text explicitly address the grant's eligibility requirements?"
+    focus_coverage:
+      type: score
+      instructions: "How completely does the application cover the grant's focus areas?"
+      criteria: ["Does not address them", "Partly addresses them", "Fully addresses them"]
+
+# --- Pipelines ---------------------------------------------------------------
+# Ordered step lists. Reorder, remove or add steps here; no code changes needed.
+# A step is either `name` or `{name: {param: value}}`. See GET /v1/steps.
+pipelines:
+  grant_match:
+    - jev_match_grants: {field: profile}
+  application_alignment:
+    - jev_alignment: {field: application}

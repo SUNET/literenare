@@ -1,0 +1,9 @@
+{
+  "profile": {
+    "field": "Machine learning",
+    "expertise": ["remote sensing", "flood forecasting", "time-series models"],
+    "career_stage": "Postdoc, PhD 2022",
+    "affiliation": "Uppsala University, Sweden"
+  },
+  "top_k": 5
+}

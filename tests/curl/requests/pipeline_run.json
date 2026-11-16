@@ -1,0 +1,4 @@
+{
+  "inputs": {"profile": "Open radio hardware developer", "top_k": 2},
+  "grant_ids": ["example-rf-hardware", "example-ml-climate", "example-early-career-bio"]
+}
